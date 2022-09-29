@@ -3,27 +3,17 @@ title: "p8105_hw2_bf2506"
 output: html_document
 date: "2022-09-29"
 ---
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r load tidyverse}
+library(tidyverse)
+library(magrittr)
 ```
 
-## R Markdown
+```{r read data}
+raw_Mrtrash_wheel_data = readxl::read_excel("./data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx", sheet = "Mr. Trash Wheel", range = "A2:N533", na = c("", "Decemeber Total", "November Total", "October Total", "September Total", "August Total", "July Total", "June Total", "May Total", "April Total", "March Total", "February Total", "January Total"))
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+Mrtrash_wheel_data = drop_na(raw_Mrtrash_wheel_data, Dumpster)
 ```
+```{r rename}
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+Mrtrash_wheel_data = janitor::clean_names(Mrtrash_wheel_data) %>% rename(volume_cubicyards = volume_cubic_yards)
 ```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
