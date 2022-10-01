@@ -26,3 +26,22 @@ raw_Professortrash_wheel_data = readxl::read_excel("./data/Trash-Wheel-Collectio
 
 Professortrash_wheel_data = drop_na(raw_Professortrash_wheel_data, Dumpster)
 ```
+
+```{r rename and transfer sportsballs to integer}
+
+Professortrash_wheel_data = janitor::clean_names(Professortrash_wheel_data) %>% rename(volume_cubicyards = volume_cubic_yards) %>% mutate(sports_balls=as.integer(sports_balls)) 
+
+```
+
+```{r combine tables}
+Mrtrash_wheel_data = 
+  mutate(Mrtrash_wheel_data, trash_wheel = "Mr_Trash_Wheel")
+
+Professortrash_wheel_data =
+  mutate(Professortrash_wheel_data, trash_wheel = "Professor_Trash_Wheel")
+
+Trash_Wheel_data = 
+  bind_rows(Mrtrash_wheel_data, Professortrash_wheel_data) %>% relocate(trash_wheel)
+
+```
+
