@@ -8,26 +8,26 @@ library(tidyverse)
 library(magrittr)
 ```
 
-```{r read data}
+```{r read Mrtrash_wheel_data}
 raw_Mrtrash_wheel_data = readxl::read_excel("./data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx", sheet = "Mr. Trash Wheel", range = "A2:N533", na = c("", "Decemeber Total", "November Total", "October Total", "September Total", "August Total", "July Total", "June Total", "May Total", "April Total", "March Total", "February Total", "January Total")
 )
 
 Mrtrash_wheel_data = drop_na(raw_Mrtrash_wheel_data, Dumpster)
 ```
-```{r rename and transfer sportsballs to integer}
+```{r rename and integer sportsballs in Mr}
 
 Mrtrash_wheel_data = janitor::clean_names(Mrtrash_wheel_data) %>% rename(volume_cubicyards = volume_cubic_yards) %>% mutate(sports_balls=as.integer(sports_balls)) 
 
 ```
 
-```{r read data}
+```{r read Professortrash_wheel_data}
 raw_Professortrash_wheel_data = readxl::read_excel("./data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx", sheet = "Professor Trash Wheel", range = "A2:N115", na = c("", "Decemeber Total", "November Total", "October Total", "September Total", "August Total", "July Total", "June Total", "May Total", "April Total", "March Total", "February Total", "January Total")
 )
 
 Professortrash_wheel_data = drop_na(raw_Professortrash_wheel_data, Dumpster)
 ```
 
-```{r rename and transfer sportsballs to integer}
+```{r rename and integer sportsballs in PRO }
 
 Professortrash_wheel_data = janitor::clean_names(Professortrash_wheel_data) %>% rename(volume_cubicyards = volume_cubic_yards) %>% mutate(sports_balls=as.integer(sports_balls)) 
 
@@ -44,4 +44,7 @@ Trash_Wheel_data =
   bind_rows(Mrtrash_wheel_data, Professortrash_wheel_data) %>% relocate(trash_wheel)
 
 ```
+
+**Describe the Data**
+The size of the dataset is `r ncol(Trash_Wheel_data)` columns and `r nrow(Trash_Wheel_data)` rows
 
