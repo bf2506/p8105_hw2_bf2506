@@ -3,37 +3,37 @@ title: "p8105_hw2_bf2506"
 output: html_document
 date: "2022-09-29"
 ---
-```{r load tidyverse}
+```{r load tidyverse, message=FALSE, warning=FALSE, include=FALSE}
 library(tidyverse)
 library(magrittr)
 ```
 
-```{r read Mrtrash_wheel_data}
+```{r read Mrtrash_wheel_data, message=FALSE, warning=FALSE, include=FALSE}
 raw_Mrtrash_wheel_data = readxl::read_excel("./data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx", sheet = "Mr. Trash Wheel", range = "A2:N533", na = c("", "Decemeber Total", "November Total", "October Total", "September Total", "August Total", "July Total", "June Total", "May Total", "April Total", "March Total", "February Total", "January Total")
 )
 
 Mrtrash_wheel_data = drop_na(raw_Mrtrash_wheel_data, Dumpster)
 ```
-```{r rename and integer sportsballs in Mr}
+```{r rename and integer sportsballs in Mr, message=FALSE, warning=FALSE, include=FALSE}
 
 Mrtrash_wheel_data = janitor::clean_names(Mrtrash_wheel_data) %>% rename(volume_cubicyards = volume_cubic_yards) %>% mutate(sports_balls=as.integer(sports_balls)) 
 
 ```
 
-```{r read Professortrash_wheel_data}
+```{r read Professortrash_wheel_data, message=FALSE, warning=FALSE, include=FALSE}
 raw_Professortrash_wheel_data = readxl::read_excel("./data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx", sheet = "Professor Trash Wheel", range = "A2:N115", na = c("", "Decemeber Total", "November Total", "October Total", "September Total", "August Total", "July Total", "June Total", "May Total", "April Total", "March Total", "February Total", "January Total")
 )
 
 Professortrash_wheel_data = drop_na(raw_Professortrash_wheel_data, Dumpster)
 ```
 
-```{r rename and integer sportsballs in PRO }
+```{r rename and integer sportsballs in PRO, message=FALSE, warning=FALSE, include=FALSE}
 
 Professortrash_wheel_data = janitor::clean_names(Professortrash_wheel_data) %>% rename(volume_cubicyards = volume_cubic_yards) %>% mutate(sports_balls=as.integer(sports_balls)) 
 
 ```
 
-```{r combine tables}
+```{r combine tables, message=FALSE, warning=FALSE, include=FALSE}
 Mrtrash_wheel_data = 
   mutate(Mrtrash_wheel_data, trash_wheel = "Mr_Trash_Wheel")
 
@@ -43,8 +43,42 @@ Professortrash_wheel_data =
 Trash_Wheel_data = 
   bind_rows(Mrtrash_wheel_data, Professortrash_wheel_data) %>% relocate(trash_wheel)
 
+Trash_Wheel_data
 ```
 
-**Describe the Data**
-The size of the dataset is `r ncol(Trash_Wheel_data)` columns and `r nrow(Trash_Wheel_data)` rows
+**Describe the Data form Trash_Wheel_data**
+ 
+The size of the dataset is **`r ncol(Trash_Wheel_data)` variables** and **`r nrow(Trash_Wheel_data)` observations**, and the total weight of trash collected by Professor Trash Wheel is`r sum(Professortrash_wheel_data$weight_tons)` and the total number of sports balls collected by Mr. Trash Wheel in 2020 is `r sum(filter(Mrtrash_wheel_data, year == 2020)$sports_balls)`
+
+**15** variables are as following:  
+**·trash_wheel**: whether from "Mr_Trash_Wheel" or "	
+Professor_Trash_Wheel"
+
+**·dumpster**: the number of dumpsters 
+
+**·"month"**: the month that collect the data, from Jan to Dec
+
+**·"year" **: the year that collect the data
+
+**·"date" **: the date that collect the data
+
+**·"weight_tons"**: weight in tons
+
+**·"volume_cubicyards"**: volume in cubic yards
+
+**·"plastic_bottles"**:  the number of plastic bottles
+
+**·"polystyrene"**: the number of polystyrene
+
+**·"cigarette_butts"**: the number of cigarette butts 
+
+**·"glass_bottles"**: the number of glass bottles 
+
+**·"grocery_bags"**: the number of grocery bags 
+
+**·"chip_bags"**: the number of chip bags
+
+**·"sports_balls"**：the number of sports balls
+
+**·"homes_powered"**: the number of homes powered by  electricity generated from these trash
 
