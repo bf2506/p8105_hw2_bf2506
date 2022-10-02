@@ -96,13 +96,13 @@ pols_month_data=
 ```{r read and clean  snp_data, message=FALSE, warning=FALSE, include=FALSE}
 
 snp_data_1 =
-  read_csv("./data/snp.csv", n_max = 175) %>% janitor::clean_names() %>% separate(date, into = c("year", "month", "day"), sep = "\\/") %>% select(-day) %>% mutate( year = recode(year, `1` = "2001", `2` = "2002", `3` = "2003", `4` = "2004", `5` = "2005", `6` = "2006", `7` = "2007", `8` = "2008", `9` = "2009", `10` = "2010", `11` = "2011", `12` = "2012")) %>% mutate( year = as.integer(year), month = as.integer(month))
+  read_csv("./data/snp.csv", n_max = 175) %>% janitor::clean_names() %>% separate(date, into = c("year", "month", "day"), sep = "\\/") %>% select(-day) %>% mutate( year = as.integer(year), month = as.integer(month)) %>% mutate( year = as.integer(year + 2000))
 
 snp_data_2 =
   read_csv("./data/snp.csv", skip = 176, col_names = FALSE) %>% separate(X1, into = c("month", "day", "year"), sep = "\\/") %>% select(-day) %>% rename(close = X2) %>% relocate(year) %>% mutate( year = as.integer(year), month = as.integer(month)) %>% mutate(year = ifelse(year == 0, as.integer(year + 2000), as.integer(year + 1900)))
 
 snp_data = 
-  bind_rows(snp_data_1, snp_data_2) %>% janitor::clean_names() %>% arrange(year, month)
+  bind_rows(snp_data_1, snp_data_2) %>% janitor::clean_names() %>% arrange(year, month)  %>% mutate( month = recode(month, `1` = "January", `2` = "February", `3` = "March", `4` = "April", `5` = "May", `6` = "June", `7` = "July", `8` = "August", `9` = "September", `10` = "October", `11` = "November", `12` = "December"))
 
 ```
 
