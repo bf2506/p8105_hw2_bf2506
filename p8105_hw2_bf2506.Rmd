@@ -85,3 +85,12 @@ Professor_Trash_Wheel"
 **·"homes_powered"**: the number of homes powered by  electricity generated from these trash
 
 ### Problem 3
+
+```{r read and clean  pols_month_data}
+pols_month_data=
+  read_csv("./data/pols-month.csv") %>% janitor::clean_names() %>% separate(mon, into = c("year", "month", "day"), sep = "\\-") %>% mutate( year = as.integer(year), month = as.integer(month), day = as.integer(day)) %>% mutate( month = replace(month, month == c(1,2,3,4,5,6,7,8,9,10,11,12), c("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")))
+    
+pols_month_data
+
+```
+
