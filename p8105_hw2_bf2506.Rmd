@@ -154,13 +154,26 @@ unemployment_data =
 
 ##### 4.Joint pols_month/snp/unemployment tables
 
-```{r joint tables}
-
-pols_snp_data = 
-  left_join(pols_month_data, snp_data, by = c("year", "month"))
+```{r joint tables, message=FALSE, warning=FALSE, include=FALSE}
 
 pols_snp_unemployment_data = 
-  left_join(pols_snp_data, unemployment_data, by = c("year", "month"))
-
+  left_join(pols_month_data, snp_data, by = c("year", "month")) %>% 
+  left_join(unemployment_data, by = c("year", "month"))
+#时间格式不确定
+#月份加不加起来
 ```
 
+### Problem 1
+
+##### 1.Read and clean and select NYC_subway_data
+```{r read and clean and select NYC_subway_data, include=FALSE}
+NYC_subway_data = 
+  read_csv(
+    "data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv",
+    col_types = cols(Route8 = "c", Route9 = "c", Route10 = "c", Route11 = "c")) %>% 
+  janitor::clean_names() %>% 
+  select(
+    line, station_name, station_latitude, station_longitude, 
+    starts_with("route"), entry, exit_only, vending, entrance_type, ada) %>% 
+  mutate(entry = ifelse(entry == "YES", TRUE, FALSE))
+```
