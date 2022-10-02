@@ -182,3 +182,47 @@ NYC_subway_data =
 I import data from `NYC_Transit_Subway_Entrance_And_Exit_Data.csv`. The process begins with data import, updates variable names, and selects the columns that will be used in later parts. We update `entry` from `yes` / `no` to a logical variable. As part of data import, we specify that `Route` columns 8-11 should be character for consistency with 1-7.(`r nrow(NYC_subway_data)`rows x `r ncol(NYC_subway_data)`columns)
 
 As it stands, these data are not "tidy": route number should be a variable, as should route. That is, to obtain a tidy dataset we would need to convert `route` variables from wide to long format. This will be useful when focusing on specific routes, but may not be necessary when considering questions that focus on station-level variables. 
+ 
+##### 3.Calculate number of distinct stations
+```{r number of distinct stations, message=FALSE, warning=FALSE, include=FALSE}
+NYC_subway_data %>% 
+  select(station_name, line) %>% 
+  distinct
+```
+
+##### 4.Calculate number of ADA stations
+```{r number of ADA stations, message=FALSE, warning=FALSE, include=FALSE}
+NYC_subway_data %>% 
+  filter(ada == TRUE) %>% 
+  select(station_name, line) %>% 
+  distinct
+```
+
+##### 5.Proportion of entr/exi without vending allow entrance
+```{r message=FALSE, warning=FALSE, include=FALSE}
+NYC_subway_data %>% 
+  filter(vending == "NO") %>% 
+  pull(entry) %>% 
+  mean
+```
+
+##### 6.Stations serving A train/ADA
+```{r message=FALSE, warning=FALSE, include=FALSE}
+NYC_subway_data %>% 
+  pivot_longer(
+    route1:route11,
+    names_to = "route_num",
+    values_to = "route") %>% 
+  filter(route == "A") %>% 
+  select(station_name, line) %>% 
+  distinct
+
+NYC_subway_data %>% 
+  pivot_longer(
+    route1:route11,
+    names_to = "route_num",
+    values_to = "route") %>% 
+  filter(route == "A", ada == TRUE) %>% 
+  select(station_name, line) %>% 
+  distinct
+```
