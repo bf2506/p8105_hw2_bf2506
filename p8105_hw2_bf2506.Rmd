@@ -169,7 +169,7 @@ pols_snp_unemployment_data =
 ```{r read and clean and select NYC_subway_data, include=FALSE}
 NYC_subway_data = 
   read_csv(
-    "data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv",
+    "./data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv",
     col_types = cols(Route8 = "c", Route9 = "c", Route10 = "c", Route11 = "c")) %>% 
   janitor::clean_names() %>% 
   select(
@@ -177,3 +177,6 @@ NYC_subway_data =
     starts_with("route"), entry, exit_only, vending, entrance_type, ada) %>% 
   mutate(entry = ifelse(entry == "YES", TRUE, FALSE))
 ```
+
+##### 2.Describe NYC_subway_data
+I import data from `NYC_Transit_Subway_Entrance_And_Exit_Data.csv`. The process begins with data import, updates variable names, and selects the columns that will be used in later parts. We update `entry` from `yes` / `no` to a logical variable. As part of data import, we specify that `Route` columns 8-11 should be character for consistency with 1-7.(`r nrow(NYC_subway_data)`rows x `r ncol(NYC_subway_data)`columns)

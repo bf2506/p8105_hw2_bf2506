@@ -421,11 +421,22 @@ electricity generated from these trash</p>
 </div>
 <div id="joint-pols_monthsnpunemployment-tables" class="section level5">
 <h5>4.Joint pols_month/snp/unemployment tables</h5>
-<pre class="r"><code>pols_snp_data = 
-  left_join(pols_month_data, snp_data, by = c(&quot;year&quot;, &quot;month&quot;))
-
-pols_snp_unemployment_data = 
-  left_join(pols_snp_data, unemployment_data, by = c(&quot;year&quot;, &quot;month&quot;))</code></pre>
+</div>
+</div>
+<div id="problem-1" class="section level3">
+<h3>Problem 1</h3>
+<div id="read-and-clean-and-select-nyc_subway_data" class="section level5">
+<h5>1.Read and clean and select NYC_subway_data</h5>
+</div>
+<div id="describe-nyc_subway_data" class="section level5">
+<h5>2.Describe NYC_subway_data</h5>
+<p>I import data from
+<code>NYC_Transit_Subway_Entrance_And_Exit_Data.csv</code>. The process
+begins with data import, updates variable names, and selects the columns
+that will be used in later parts. We update <code>entry</code> from
+<code>yes</code> / <code>no</code> to a logical variable. As part of
+data import, we specify that <code>Route</code> columns 8-11 should be
+character for consistency with 1-7.(1868rows x 20columns)</p>
 </div>
 </div>
 
