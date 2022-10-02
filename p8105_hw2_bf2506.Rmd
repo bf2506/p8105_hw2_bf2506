@@ -8,6 +8,8 @@ library(tidyverse)
 library(magrittr)
 ```
 
+
+### Problem 2
 ```{r read Mrtrash_wheel_data, message=FALSE, warning=FALSE, include=FALSE}
 raw_Mrtrash_wheel_data = readxl::read_excel("./data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx", sheet = "Mr. Trash Wheel", range = "A2:N533", na = c("", "Decemeber Total", "November Total", "October Total", "September Total", "August Total", "July Total", "June Total", "May Total", "April Total", "March Total", "February Total", "January Total")
 )
@@ -82,3 +84,4 @@ Professor_Trash_Wheel"
 
 **·"homes_powered"**: the number of homes powered by  electricity generated from these trash
 
+### Problem 3
