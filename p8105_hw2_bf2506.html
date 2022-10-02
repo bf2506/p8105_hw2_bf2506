@@ -380,9 +380,11 @@ pre code {
 <h5>3.Combine two tables</h5>
 <p><strong>Describe the Data form Trash_Wheel_data</strong></p>
 <p>The size of the dataset is <strong>15 variables</strong> and
-<strong>524 observations</strong>, and the total weight of trash
-collected by Professor Trash Wheel is135.5 and the total number of
-sports balls collected by Mr. Trash Wheel in 2020 is 856</p>
+<strong>524 observations</strong>, showing the summary of trash
+collection from two trash wheel(Mr.trash wheel and Professor trash
+wheel). And the total weight of trash collected by Professor Trash Wheel
+is135.5 and the total number of sports balls collected by Mr. Trash
+Wheel in 2020 is 856</p>
 <p><strong>15</strong> variables are as following:<br />
 <strong>·trash_wheel</strong>: whether from “Mr_Trash_Wheel” or ”<br />
 Professor_Trash_Wheel”</p>
@@ -419,6 +421,11 @@ electricity generated from these trash</p>
 </div>
 <div id="joint-pols_monthsnpunemployment-tables" class="section level5">
 <h5>4.Joint pols_month/snp/unemployment tables</h5>
+<pre class="r"><code>pols_snp_data = 
+  left_join(pols_month_data, snp_data, by = c(&quot;year&quot;, &quot;month&quot;))
+
+pols_snp_unemployment_data = 
+  left_join(pols_snp_data, unemployment_data, by = c(&quot;year&quot;, &quot;month&quot;))</code></pre>
 </div>
 </div>
 

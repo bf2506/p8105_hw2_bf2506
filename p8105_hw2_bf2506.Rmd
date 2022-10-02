@@ -64,7 +64,7 @@ Trash_Wheel_data =
 
 **Describe the Data form Trash_Wheel_data**
  
-The size of the dataset is **`r ncol(Trash_Wheel_data)` variables** and **`r nrow(Trash_Wheel_data)` observations**, and the total weight of trash collected by Professor Trash Wheel is`r sum(Professortrash_wheel_data$weight_tons)` and the total number of sports balls collected by Mr. Trash Wheel in 2020 is `r sum(filter(Mrtrash_wheel_data, year == 2020)$sports_balls)`
+The size of the dataset is **`r ncol(Trash_Wheel_data)` variables** and **`r nrow(Trash_Wheel_data)` observations**, showing the summary of trash collection from two trash wheel(Mr.trash wheel and Professor trash wheel). And the total weight of trash collected by Professor Trash Wheel is`r sum(Professortrash_wheel_data$weight_tons)` and the total number of sports balls collected by Mr. Trash Wheel in 2020 is `r sum(filter(Mrtrash_wheel_data, year == 2020)$sports_balls)`
 
 **15** variables are as following:  
 **·trash_wheel**: whether from "Mr_Trash_Wheel" or "	
@@ -156,9 +156,11 @@ unemployment_data =
 
 ```{r joint tables}
 
+pols_snp_data = 
+  left_join(pols_month_data, snp_data, by = c("year", "month"))
 
-
-
+pols_snp_unemployment_data = 
+  left_join(pols_snp_data, unemployment_data, by = c("year", "month"))
 
 ```
 
