@@ -10,23 +10,36 @@ library(magrittr)
 
 
 ### Problem 2
-```{r read Mrtrash_wheel_data, message=FALSE, warning=FALSE, include=FALSE}
-raw_Mrtrash_wheel_data = readxl::read_excel("./data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx", sheet = "Mr. Trash Wheel", range = "A2:N533", na = c("", "Decemeber Total", "November Total", "October Total", "September Total", "August Total", "July Total", "June Total", "May Total", "April Total", "March Total", "February Total", "January Total")
-)
 
+##### 1.Read and clean Mrtrash_data
+```{r read Mrtrash_wheel_data, message=FALSE, warning=FALSE, include=FALSE}
+raw_Mrtrash_wheel_data =  
+  readxl::read_excel("./data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx",
+  sheet = "Mr. Trash Wheel",
+  range = "A2:N533",
+  na = c("", "Decemeber Total", "November Total", "October Total", "September Total", "August Total", "July Total", "June Total", "May Total", "April Total", "March Total", "February Total", "January Total")
+)
 Mrtrash_wheel_data = drop_na(raw_Mrtrash_wheel_data, Dumpster)
+
 ```
+
 ```{r rename and integer sportsballs in Mr, message=FALSE, warning=FALSE, include=FALSE}
 
 Mrtrash_wheel_data = janitor::clean_names(Mrtrash_wheel_data) %>% rename(volume_cubicyards = volume_cubic_yards) %>% mutate(sports_balls=as.integer(sports_balls)) 
 
 ```
 
+##### 2.Read and clean Professortrash_data
 ```{r read Professortrash_wheel_data, message=FALSE, warning=FALSE, include=FALSE}
-raw_Professortrash_wheel_data = readxl::read_excel("./data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx", sheet = "Professor Trash Wheel", range = "A2:N115", na = c("", "Decemeber Total", "November Total", "October Total", "September Total", "August Total", "July Total", "June Total", "May Total", "April Total", "March Total", "February Total", "January Total")
+raw_Professortrash_wheel_data = 
+  readxl::read_excel("./data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx",
+  sheet = "Professor Trash Wheel", 
+  range = "A2:N115", 
+  na = c("", "Decemeber Total", "November Total", "October Total", "September Total", "August Total", "July Total", "June Total", "May Total", "April Total", "March Total", "February Total", "January Total")
 )
 
 Professortrash_wheel_data = drop_na(raw_Professortrash_wheel_data, Dumpster)
+
 ```
 
 ```{r rename and integer sportsballs in PRO, message=FALSE, warning=FALSE, include=FALSE}
@@ -35,6 +48,8 @@ Professortrash_wheel_data = janitor::clean_names(Professortrash_wheel_data) %>% 
 
 ```
 
+
+##### 3.Combine two tables
 ```{r combine tables, message=FALSE, warning=FALSE, include=FALSE}
 Mrtrash_wheel_data = 
   mutate(Mrtrash_wheel_data, trash_wheel = "Mr_Trash_Wheel")
@@ -45,7 +60,6 @@ Professortrash_wheel_data =
 Trash_Wheel_data = 
   bind_rows(Mrtrash_wheel_data, Professortrash_wheel_data) %>% relocate(trash_wheel)
 
-Trash_Wheel_data
 ```
 
 **Describe the Data form Trash_Wheel_data**
@@ -86,35 +100,65 @@ Professor_Trash_Wheel"
 
 ### Problem 3
 
-##### First, clean the data in pols-month.csv
+##### 1.Clean the data in pols-month.csv
 ```{r read and clean  pols_month_data, message=FALSE, warning=FALSE, include=FALSE}
 pols_month_data=
-  read_csv("./data/pols-month.csv") %>% janitor::clean_names() %>% separate(mon, into = c("year", "month", "day"), sep = "\\-") %>% mutate( year = as.integer(year), month = as.integer(month), day = as.integer(day)) %>% mutate( month = replace(month, month == c(1,2,3,4,5,6,7,8,9,10,11,12), c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"))) %>% mutate(president = ifelse(prez_gop - prez_dem > 0, "gop", "dem")) %>% select(-c(prez_gop, prez_dem, day))
+  read_csv("./data/pols-month.csv") %>% 
+  janitor::clean_names() %>% 
+  separate(mon, into = c("year", "month", "day"), sep = "\\-") %>% 
+  mutate( year = as.integer(year), month = as.integer(month), day = as.integer(day)) %>% 
+  mutate( month = replace(month, month == c(1,2,3,4,5,6,7,8,9,10,11,12), c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"))) %>%
+  mutate(president = ifelse(prez_gop - prez_dem > 0, "gop", "dem")) %>% 
+  select(-c(prez_gop, prez_dem, day))
+
 ```
 
-##### Second, clean the data in snp.csv
+##### 2.Clean the data in snp.csv
 ```{r read and clean  snp_data, message=FALSE, warning=FALSE, include=FALSE}
 
 snp_data_1 =
-  read_csv("./data/snp.csv", n_max = 175) %>% janitor::clean_names() %>% separate(date, into = c("year", "month", "day"), sep = "\\/") %>% select(-day) %>% mutate( year = as.integer(year), month = as.integer(month)) %>% mutate( year = as.integer(year + 2000))
+  read_csv("./data/snp.csv", n_max = 175) %>%
+  janitor::clean_names() %>% 
+  separate(date, into = c("year", "month", "day"), sep = "\\/") %>% 
+  select(-day) %>% 
+  mutate( year = as.integer(year), month = as.integer(month)) %>% 
+  mutate( year = as.integer(year + 2000))
 
 snp_data_2 =
-  read_csv("./data/snp.csv", skip = 176, col_names = FALSE) %>% separate(X1, into = c("month", "day", "year"), sep = "\\/") %>% select(-day) %>% rename(close = X2) %>% relocate(year) %>% mutate( year = as.integer(year), month = as.integer(month)) %>% mutate(year = ifelse(year == 0, as.integer(year + 2000), as.integer(year + 1900)))
+  read_csv("./data/snp.csv", skip = 176, col_names = FALSE) %>% 
+  separate(X1, into = c("month", "day", "year"), sep = "\\/") %>% 
+  select(-day) %>% 
+  rename(close = X2) %>% 
+  relocate(year) %>% 
+  mutate( year = as.integer(year), month = as.integer(month)) %>% 
+  mutate(year = ifelse(year == 0, as.integer(year + 2000), as.integer(year + 1900)))
 
 snp_data = 
-  bind_rows(snp_data_1, snp_data_2) %>% janitor::clean_names() %>% arrange(year, month)  %>% mutate( month = recode(month, `1` = "Jan", `2` = "Feb", `3` = "Mar", `4` = "Apr", `5` = "May", `6` = "Jun", `7` = "Jul", `8` = "Aug", `9` = "Sep", `10` = "Oct", `11` = "Nov", `12` = "Dec"))
+  bind_rows(snp_data_1, snp_data_2) %>% 
+  janitor::clean_names() %>% 
+  arrange(year, month)  %>% 
+  mutate( month = recode(month, `1` = "Jan", `2` = "Feb", `3` = "Mar", `4` = "Apr", `5` = "May", `6` = "Jun", `7` = "Jul", `8` = "Aug", `9` = "Sep", `10` = "Oct", `11` = "Nov", `12` = "Dec"))
 
 ```
 
-##### Third, tidy unemployment data
+##### 3.Tidy unemployment data
 
-```{r read and clean and tidy unemployment_data}
+```{r read and clean and tidy unemployment_data, message=FALSE, warning=FALSE, include=FALSE}
 unemployment_data = 
   read_csv("./data/unemployment.csv") %>% 
-  janitor::clean_names() %>% pivot_longer(jan:dec, names_to = "month", values_to = "unemployment_percentage") %>% mutate(month = sub("(.)", "\\U\\1", month, perl = TRUE))
+  janitor::clean_names() %>% 
+  pivot_longer(jan:dec, names_to = "month", values_to = "unemployment_percentage") %>% 
+  mutate(month = sub("(.)", "\\U\\1", month, perl = TRUE))
+
+```
+
+##### 4.Joint pols_month/snp/unemployment tables
+
+```{r joint tables}
+
+
 
 
 
 ```
-
 
