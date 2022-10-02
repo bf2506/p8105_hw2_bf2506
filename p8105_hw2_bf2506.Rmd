@@ -86,8 +86,20 @@ Professor_Trash_Wheel"
 
 ### Problem 3
 
-```{r read and clean  pols_month_data}
+```{r read and clean  pols_month_data, message=FALSE, warning=FALSE, include=FALSE}
 pols_month_data=
   read_csv("./data/pols-month.csv") %>% janitor::clean_names() %>% separate(mon, into = c("year", "month", "day"), sep = "\\-") %>% mutate( year = as.integer(year), month = as.integer(month), day = as.integer(day)) %>% mutate( month = replace(month, month == c(1,2,3,4,5,6,7,8,9,10,11,12), c("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"))) %>% mutate(president = ifelse(prez_gop - prez_dem > 0, "gop", "dem")) %>% select(-c(prez_gop, prez_dem, day))
 ```
 
+```{r read and clean  snp_data, message=FALSE, warning=FALSE, include=FALSE}
+
+snp_data_1 =
+  read_csv("./data/snp.csv", n_max = 175) %>% janitor::clean_names() %>% separate(date, into = c("year", "month", "day"), sep = "\\/") %>% select(-day) %>% mutate( year = recode(year, `1` = "2001", `2` = "2002", `3` = "2003", `4` = "2004", `5` = "2005", `6` = "2006", `7` = "2007", `8` = "2008", `9` = "2009", `10` = "2010", `11` = "2011", `12` = "2012")) %>% mutate( year = as.integer(year), month = as.integer(month))
+
+snp_data_2 =
+  read_csv("./data/snp.csv", skip = 176, col_names = FALSE) %>% separate(X1, into = c("month", "day", "year"), sep = "\\/") %>% select(-day) %>% rename(close = X2) %>% relocate(year) %>% mutate( year = as.integer(year), month = as.integer(month)) %>% mutate(year = ifelse(year == 0, as.integer(year + 2000), as.integer(year + 1900)))
+
+snp_data = 
+  bind_rows(snp_data_1, snp_data_2) %>% janitor::clean_names() %>% arrange(year, month)
+
+```
