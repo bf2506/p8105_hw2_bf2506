@@ -137,20 +137,18 @@ unemployment_data =
   read_csv("./data/unemployment.csv") %>% 
   janitor::clean_names() %>% 
   pivot_longer(jan:dec, names_to = "month", values_to = "unemployment_percentage") %>% 
-  mutate(month = sub("(.)", "\\U\\1", month, perl = TRUE))
-
+  mutate(month = sub("(.)", "\\U\\1", month, perl = TRUE), year = as.integer(year))
 
 ```
 
 ##### 4.Joint pols_month/snp/unemployment tables
 
-```{r joint tables, message=FALSE, warning=FALSE, include=FALSE}
+```{r joint tables, message=FALSE, warning=FALSE}
 
 pols_snp_unemployment_data = 
   left_join(pols_month_data, snp_data, by = c("year", "month")) %>% 
   left_join(unemployment_data, by = c("year", "month"))
-#时间格式不确定
-#月份加不加起来
+
 ```
 
 ### Problem 1
