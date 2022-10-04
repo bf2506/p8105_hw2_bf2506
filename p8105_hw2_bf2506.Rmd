@@ -6,6 +6,7 @@ date: "2022-09-29"
 ```{r load package, message=FALSE, warning=FALSE, include=FALSE}
 library(tidyverse)
 library(magrittr)
+library(lubridate)
 ```
 
 
@@ -114,36 +115,23 @@ pols_month_data=
 ```
 
 ##### 2.Clean the data in snp.csv
-```{r read and clean  snp_data, message=FALSE, warning=FALSE, include=FALSE}
+```{r read and clean  snp_data, echo=FALSE, message=FALSE, warning=FALSE}
 
-snp_data_1 =
-  read_csv("./data/snp.csv", n_max = 175) %>%
+snp_data =
+  read_csv("./data/snp.csv") %>%
   janitor::clean_names() %>% 
-  separate(date, into = c("year", "month", "day"), sep = "\\/") %>% 
-  select(-day) %>% 
-  mutate( year = as.integer(year), month = as.integer(month)) %>% 
-  mutate( year = as.integer(year + 2000))
+  mutate(date = parse_date_time(date, order = c("ymd", "mdy"))) %>% 
+  separate(date, into = c("year", "month", "day", sep = "\\-"), convert = TRUE ) %>% 
 
-snp_data_2 =
-  read_csv("./data/snp.csv", skip = 176, col_names = FALSE) %>% 
-  separate(X1, into = c("month", "day", "year"), sep = "\\/") %>% 
-  select(-day) %>% 
-  rename(close = X2) %>% 
-  relocate(year) %>% 
-  mutate( year = as.integer(year), month = as.integer(month)) %>% 
-  mutate(year = ifelse(year == 0, as.integer(year + 2000), as.integer(year + 1900)))
+  mutate( year = ifelse( year >= 2050, as.integer(year),  as.integer(year - 100) ))
 
-snp_data = 
-  bind_rows(snp_data_1, snp_data_2) %>% 
-  janitor::clean_names() %>% 
-  arrange(year, month)  %>% 
-  mutate( month = recode(month, `1` = "Jan", `2` = "Feb", `3` = "Mar", `4` = "Apr", `5` = "May", `6` = "Jun", `7` = "Jul", `8` = "Aug", `9` = "Sep", `10` = "Oct", `11` = "Nov", `12` = "Dec"))
-
+  snp_data
 ```
 
 ##### 3.Tidy unemployment data
 
 ```{r read and clean and tidy unemployment_data, message=FALSE, warning=FALSE, include=FALSE}
+
 unemployment_data = 
   read_csv("./data/unemployment.csv") %>% 
   janitor::clean_names() %>% 
