@@ -68,36 +68,22 @@ The size of the dataset is **`r ncol(Trash_Wheel_data)` variables** and **`r nro
 
 **15** variables are as following:  
 **·trash_wheel**: whether from "Mr_Trash_Wheel" or "	
-Professor_Trash_Wheel"
-
-**·dumpster**: the number of dumpsters 
-
-**·"month"**: the month that collect the data, from Jan to Dec
-
-**·"year" **: the year that collect the data
-
-**·"date" **: the date that collect the data
-
-**·"weight_tons"**: weight in tons
-
-**·"volume_cubicyards"**: volume in cubic yards
-
-**·"plastic_bottles"**:  the number of plastic bottles
-
-**·"polystyrene"**: the number of polystyrene
-
-**·"cigarette_butts"**: the number of cigarette butts 
-
-**·"glass_bottles"**: the number of glass bottles 
-
-**·"grocery_bags"**: the number of grocery bags 
-
-**·"chip_bags"**: the number of chip bags
-
-**·"sports_balls"**：the number of sports balls
-
-**·"homes_powered"**: the number of homes powered by  electricity generated from these trash
-
+Professor_Trash_Wheel" <br>
+**·dumpster**: the number of dumpsters  <br>
+**·month**: the month that collect the data, from Jan to Dec <br>
+**·year**: the year that collect the data <br>
+**·date**: the date that collect the data <br>
+**·weight_tons**: weight in tons <br>
+**·volume_cubicyards**: volume in cubic yards <br>
+**·plastic_bottles**:  the number of plastic bottles <br>
+**·polystyrene**: the number of polystyrene <br>
+**·cigarette_butts**: the number of cigarette butts <br> 
+**·glass_bottles**: the number of glass bottles <br>
+**·grocery_bags**: the number of grocery bags <br>
+**·chip_bags**: the number of chip bags <br>
+**·sports_balls**：the number of sports balls <br>
+**·homes_powered**: the number of homes powered by  electricity generated from these trash <br>
+ 
 ### Problem 3
 
 ##### 1.Clean the data in pols-month.csv
@@ -119,7 +105,7 @@ pols_month_data =
 snp_data =
   read_csv("./data/snp.csv") %>%
   janitor::clean_names() %>% 
-  mutate(date = mdy(date)) %>% 
+  mutate(date = lubridate::mdy(date)) %>% 
   separate(date, into = c("year", "month", "day"), convert = TRUE ) %>% 
   select(-day) %>% 
   mutate( year = ifelse( year < 2050, as.integer(year),  as.integer(year - 100) )) %>%  
@@ -147,14 +133,32 @@ unemployment_data =
 
 pols_snp_unemployment_data = 
   left_join(pols_month_data, snp_data, by = c("year", "month")) %>% 
-  left_join(unemployment_data, by = c("year", "month"))
+  left_join(unemployment_data, by = c("year", "month")) %>% 
+  select(year, month, close, unemployment_percentage, president, everything())
 
 ```
+##### 5.Describe these tables
+
+**pols_month_data**  is related to the number of national politicians who are democratic or republican per month from January 1947 to June 2015 and contains 822 observations of 9 variables ("year", "month，"president", "gov_gop", "sen_gop", "rep_gop", "gov_dem", "sen_dem", "rep_dem")
+ 
+**snp_data** is related to Standard & Poor’s stock market index (a representative measure of the stock market as a whole) per month from January 1950 to July 2015 and contains 787 observations of 3 variables ("year", "month", "close")
+       
+**unemployment_data** is related to percentage of unemployment per month from January 1948 to December 2015 and contains 816 observations of 3 variables ("year", "month", "unemployment_percentage")
+
+**pols_snp_unemployment_data** is merged by pols_month_data, snp_data and unemployment_data, related to  the number of national politicians who are democratic or republican/S&P index/
+unemployment percentage. The 3 in 1 table contains 822 observations and 11 variables per year from January 1947 to June 2015. Some key variables are as following:
+ 
+**year** : the year of the observations on that row <br>
+**month** : the month of the observations on that row <br>
+**close** : the closing values of the S&P stock index <br>
+**unemployment** : the percentage of unemployment <br>
+ **president** : whether the president was dem or gop <br>
+
 
 ### Problem 1
 
 ##### 1.Read and clean and select NYC_subway_data
-```{r read and clean and select NYC_subway_data, include=FALSE}
+```{r read and clean and select NYC_subway_data}
 NYC_subway_data = 
   read_csv(
     "./data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv",
@@ -172,14 +176,14 @@ I import data from `NYC_Transit_Subway_Entrance_And_Exit_Data.csv`. The process 
 As it stands, these data are not "tidy": route number should be a variable, as should route. That is, to obtain a tidy dataset we would need to convert `route` variables from wide to long format. This will be useful when focusing on specific routes, but may not be necessary when considering questions that focus on station-level variables. 
  
 ##### 3.Calculate number of distinct stations
-```{r number of distinct stations, message=FALSE, warning=FALSE, include=FALSE}
+```{r number of distinct stations, message=FALSE, warning=FALSE}
 NYC_subway_data %>% 
   select(station_name, line) %>% 
   distinct
 ```
 
 ##### 4.Calculate number of ADA stations
-```{r number of ADA stations, message=FALSE, warning=FALSE, include=FALSE}
+```{r number of ADA stations, message=FALSE, warning=FALSE}
 NYC_subway_data %>% 
   filter(ada == TRUE) %>% 
   select(station_name, line) %>% 
@@ -187,7 +191,7 @@ NYC_subway_data %>%
 ```
 
 ##### 5.Proportion of entr/exi without vending allow entrance
-```{r message=FALSE, warning=FALSE, include=FALSE}
+```{r message=FALSE, warning=FALSE}
 NYC_subway_data %>% 
   filter(vending == "NO") %>% 
   pull(entry) %>% 
@@ -195,7 +199,7 @@ NYC_subway_data %>%
 ```
 
 ##### 6.Stations serving A train/ADA
-```{r message=FALSE, warning=FALSE, include=FALSE}
+```{r message=FALSE, warning=FALSE}
 NYC_subway_data %>% 
   pivot_longer(
     route1:route11,
