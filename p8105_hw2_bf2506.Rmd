@@ -3,7 +3,7 @@ title: "p8105_hw2_bf2506"
 output: github_document
 date: "2022-09-29"
 ---
-```{r load package, message=FALSE, warning=FALSE, include=FALSE}
+```{r load package, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(magrittr)
 ```
@@ -12,7 +12,7 @@ library(magrittr)
 ### Problem 2
 
 ##### 1.Read and clean Mrtrash_data
-```{r read Mrtrash_wheel_data, message=FALSE, warning=FALSE, include=FALSE}
+```{r read Mrtrash_wheel_data, message=FALSE, warning=FALSE}
 raw_Mrtrash_wheel_data =  
   readxl::read_excel("./data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx",
   sheet = "Mr. Trash Wheel",
@@ -23,14 +23,14 @@ Mrtrash_wheel_data = drop_na(raw_Mrtrash_wheel_data, Dumpster)
 
 ```
 
-```{r rename and integer sportsballs in Mr, message=FALSE, warning=FALSE, include=FALSE}
+```{r rename and integer sportsballs in Mr, message=FALSE, warning=FALSE}
 
 Mrtrash_wheel_data = janitor::clean_names(Mrtrash_wheel_data) %>% rename(volume_cubicyards = volume_cubic_yards) %>% mutate(sports_balls=as.integer(sports_balls)) 
 
 ```
 
 ##### 2.Read and clean Professortrash_data
-```{r read Professortrash_wheel_data, message=FALSE, warning=FALSE, include=FALSE}
+```{r read Professortrash_wheel_data, message=FALSE, warning=FALSE}
 raw_Professortrash_wheel_data = 
   readxl::read_excel("./data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx",
   sheet = "Professor Trash Wheel", 
@@ -42,7 +42,7 @@ Professortrash_wheel_data = drop_na(raw_Professortrash_wheel_data, Dumpster)
 
 ```
 
-```{r rename and integer sportsballs in PRO, message=FALSE, warning=FALSE, include=FALSE}
+```{r rename and integer sportsballs in PRO, message=FALSE, warning=FALSE}
 
 Professortrash_wheel_data = janitor::clean_names(Professortrash_wheel_data) %>% rename(volume_cubicyards = volume_cubic_yards) %>% mutate(sports_balls = as.integer(sports_balls)) 
 
@@ -50,7 +50,7 @@ Professortrash_wheel_data = janitor::clean_names(Professortrash_wheel_data) %>% 
 
 
 ##### 3.Combine two tables
-```{r combine tables, message=FALSE, warning=FALSE, include=FALSE}
+```{r combine tables, message=FALSE, warning=FALSE}
 Mrtrash_wheel_data = 
   mutate(Mrtrash_wheel_data, trash_wheel = "Mr_Trash_Wheel")
 
@@ -101,8 +101,8 @@ Professor_Trash_Wheel"
 ### Problem 3
 
 ##### 1.Clean the data in pols-month.csv
-```{r read and clean  pols_month_data, message=FALSE, warning=FALSE, include=FALSE}
-pols_month_data=
+```{r read and clean  pols_month_data, message=FALSE, warning=FALSE}
+pols_month_data =
   read_csv("./data/pols-month.csv") %>% 
   janitor::clean_names() %>% 
   separate(mon, into = c("year", "month", "day"), sep = "\\-") %>% 
@@ -114,7 +114,7 @@ pols_month_data=
 ```
 
 ##### 2.Clean the data in snp.csv
-```{r read and clean  snp_data, message=FALSE, warning=FALSE, include=FALSE}
+```{r read and clean  snp_data, message=FALSE, warning=FALSE}
 
 snp_data =
   read_csv("./data/snp.csv") %>%
@@ -122,20 +122,23 @@ snp_data =
   mutate(date = mdy(date)) %>% 
   separate(date, into = c("year", "month", "day"), convert = TRUE ) %>% 
   select(-day) %>% 
-  mutate( year = ifelse( year < 2050, as.integer(year),  as.integer(year - 100) )) %>% 
-  mutate(month = month.abb[month])
+  mutate( year = ifelse( year < 2050, as.integer(year),  as.integer(year - 100) )) %>%  
+  arrange(year, month) %>% 
+  mutate(month = month.abb[month]) %>% 
+  select(year, month, everything())
 
 ```
 
 ##### 3.Tidy unemployment data
 
-```{r read and clean and tidy unemployment_data, message=FALSE, warning=FALSE, include=FALSE}
+```{r read and clean and tidy unemployment_data, message=FALSE, warning=FALSE}
 
 unemployment_data = 
   read_csv("./data/unemployment.csv") %>% 
   janitor::clean_names() %>% 
   pivot_longer(jan:dec, names_to = "month", values_to = "unemployment_percentage") %>% 
   mutate(month = sub("(.)", "\\U\\1", month, perl = TRUE))
+
 
 ```
 
