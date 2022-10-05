@@ -35,7 +35,8 @@ Professortrash_wheel_data =
   sheet = "Professor Trash Wheel", 
   range = "A2:M96") %>% 
   janitor::clean_names() %>% 
-  rename(volume_cubicyards = volume_cubic_yards)
+  rename(volume_cubicyards = volume_cubic_yards) %>% 
+  drop_na(dumpster)
 
 ```
 
